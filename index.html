@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monthly Budget Tracker</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
+    input {
+      width: 120px;
+      padding: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background: #0078ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #005fcc;
+    }
+    .reset {
+      background: #cc0000;
+      margin-top: 10px;
+    }
+    .reset:hover {
+      background: #990000;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Monthly Budget Tracker</h1>
+
+  <div class="container">
+    <div id="category-container"></div>
+
+    <button onclick="saveBudget()">Save Budget</button>
+    <button class="reset" onclick="resetBudget()">Reset Now</button>
+  </div>
+
+  <script>
+    const categories = [
+      "Mortgage",
+      "Tithing",
+      "Tara's Spending",
+      "Garett's Spending",
+      "Utilities",
+      "Groceries",
+      "Misc"
+    ];
+
+    function loadInputs() {
+      const container = document.getElementById("category-container");
+      container.innerHTML = "";
+
+      const saved = JSON.parse(localStorage.getItem("budgetData")) || {};
+
+      categories.forEach(cat => {
+        const row = document.createElement("div");
+        row.className = "row";
+
+        row.innerHTML = `
+          <label>${cat}</label>
+          <input type="number" id="${cat}" value="${saved[cat] || ""}" />
+        `;
+
+        container.appendChild(row);
+      });
+    }
+
+    function saveBudget() {
+      const data = {};
+      categories.forEach(cat => {
+        data[cat] = document.getElementById(cat).value;
+      });
+
+      const month = new Date().getMonth();
+      localStorage.setItem("budgetData", JSON.stringify(data));
+      localStorage.setItem("budgetMonth", month);
+
+      alert("Budget saved!");
+    }
+
+    function resetBudget() {
+      localStorage.removeItem("budgetData");
+      loadInputs();
+      alert("Budget reset!");
+    }
+
+    function autoResetIfNewMonth() {
+      const savedMonth = localStorage.getItem("budgetMonth");
+      const currentMonth = new Date().getMonth();
+
+      if (savedMonth === null || parseInt(savedMonth) !== currentMonth) {
+        resetBudget();
+        localStorage.setItem("budgetMonth", currentMonth);
+      }
+    }
+
+    autoResetIfNewMonth();
+    loadInputs();
+  </script>
+</body>
+</html>
