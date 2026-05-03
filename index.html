@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monthly Household Budget</title>
+    <title>Monthly Budget Balancer</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans">
@@ -14,21 +14,46 @@
             <p class="text-slate-500">Data resets automatically on the 1st of every month.</p>
         </header>
 
+        <!-- Summary & Config Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs text-slate-500 uppercase font-semibold">Total Budget</p>
+                <div class="flex items-center mt-1">
+                    <span class="text-lg mr-1">$</span>
+                    <input type="number" id="monthlyLimit" class="text-xl font-bold w-full focus:outline-none text-blue-600" placeholder="0">
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs text-slate-500 uppercase font-semibold">Tithing %</p>
+                <div class="flex items-center mt-1">
+                    <input type="number" id="tithingPercent" class="text-xl font-bold w-full focus:outline-none text-blue-600" placeholder="10">
+                    <span class="text-lg ml-1">%</span>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs text-slate-500 uppercase font-semibold">Total Spent</p>
+                <p id="totalSpent" class="text-xl font-bold mt-1">$0.00</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs text-slate-500 uppercase font-semibold">Remaining</p>
+                <p id="remainingBalance" class="text-xl font-bold mt-1">$0.00</p>
+            </div>
+        </div>
+
         <!-- Input Section -->
         <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mb-8">
             <form id="budgetForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-sm font-medium mb-1">Category</label>
-                    <select id="category" class="w-full p-2 border rounded-md">
+                    <label class="block text-sm font-medium mb-1 text-slate-600">Category</label>
+                    <select id="category" class="w-full p-2 border rounded-md bg-white">
                         <option value="Mortgage">Mortgage</option>
-                        <option value="Tithing">Tithing</option>
                         <option value="Tara's Spending">Tara's Spending</option>
                         <option value="Garett's Spending">Garett's Spending</option>
                         <option value="Other">Other</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Amount ($)</label>
+                    <label class="block text-sm font-medium mb-1 text-slate-600">Amount ($)</label>
                     <input type="number" id="amount" step="0.01" required class="w-full p-2 border rounded-md" placeholder="0.00">
                 </div>
                 <div class="flex items-end">
@@ -44,24 +69,16 @@
             <table class="w-full text-left border-collapse">
                 <thead class="bg-slate-100">
                     <tr>
-                        <th class="p-4 border-b">Category</th>
-                        <th class="p-4 border-b">Total Spent</th>
+                        <th class="p-4 border-b text-slate-600 uppercase text-xs">Category</th>
+                        <th class="p-4 border-b text-slate-600 uppercase text-xs">Amount</th>
                     </tr>
                 </thead>
-                <tbody id="budgetTableBody">
-                    <!-- Rows injected by JavaScript -->
-                </tbody>
-                <tfoot class="bg-slate-50 font-bold">
-                    <tr>
-                        <td class="p-4">Total Monthly Outbound</td>
-                        <td id="grandTotal" class="p-4 text-blue-900">$0.00</td>
-                    </tr>
-                </tfoot>
+                <tbody id="budgetTableBody"></tbody>
             </table>
         </div>
         
         <div class="mt-4 text-right">
-            <button onclick="clearDataManually()" class="text-xs text-red-500 hover:underline">Manual Reset (Clear All Data)</button>
+            <button onclick="clearDataManually()" class="text-xs text-red-400 hover:text-red-600">Manual Reset (Clear All Data)</button>
         </div>
     </div>
 
