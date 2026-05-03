@@ -1,111 +1,106 @@
-const manualCategories = ["Mortgage", "Tara's Spending", "Garett's Spending", "Other"];
-
-// Load data or initialize
-let budgetData = JSON.parse(localStorage.getItem('householdBudget')) || {
-    limit: 0,
-    tithingPercent: 10,
-    expenses: {}
+// State Management
+let state = JSON.parse(localStorage.getItem('budgetState')) || {
+    income: 0,
+    tithRate: 10,
+    transactions: [],
+    monthKey: ""
 };
 
-function checkMonthlyReset() {
-    const now = new Date();
-    const currentMonthKey = `${now.getMonth()}-${now.getFullYear()}`;
-    const lastSavedMonth = localStorage.getItem('budgetMonthKey');
+const monthDisplay = document.getElementById('monthDisplay');
+const heroBalance = document.getElementById('heroBalance');
+const incomeInput = document.getElementById('incomeInput');
+const tithDeduction = document.getElementById('tithDeduction');
+const historyList = document.getElementById('historyList');
+const tithRateDisplay = document.getElementById('tithRate');
 
-    if (lastSavedMonth !== currentMonthKey) {
-        budgetData = { limit: 0, tithingPercent: 10, expenses: {} };
-        manualCategories.forEach(cat => budgetData.expenses[cat] = 0);
-        localStorage.setItem('budgetMonthKey', currentMonthKey);
-        saveData();
+// Auto-Reset Check
+function init() {
+    const now = new Date();
+    const currentKey = `${now.getMonth()}-${now.getFullYear()}`;
+    
+    if (state.monthKey !== currentKey) {
+        state = { income: 0, tithRate: 10, transactions: [], monthKey: currentKey };
+        save();
     }
     
-    document.getElementById('currentMonthYear').innerText = 
-        now.toLocaleString('default', { month: 'long', year: 'numeric' }) + " Budget";
-    
-    // Set initial values for config fields
-    document.getElementById('monthlyLimit').value = budgetData.limit || "";
-    document.getElementById('tithingPercent').value = budgetData.tithingPercent || 0;
+    monthDisplay.innerText = now.toLocaleString('default', { month: 'long', year: 'numeric' });
+    incomeInput.value = state.income || "";
+    tithRateDisplay.innerText = state.tithRate;
+    updateUI();
 }
 
-function saveData() {
-    localStorage.setItem('householdBudget', JSON.stringify(budgetData));
-    renderTable();
-}
-
-function renderTable() {
-    const tbody = document.getElementById('budgetTableBody');
-    tbody.innerHTML = '';
+function updateUI() {
+    const income = parseFloat(state.income) || 0;
+    const tithing = (income * (state.tithRate / 100));
     
-    // 1. Calculate Tithing (Automatic)
-    const limit = parseFloat(budgetData.limit) || 0;
-    const tPercent = parseFloat(budgetData.tithingPercent) || 0;
-    const tithingAmount = (limit * tPercent) / 100;
+    const totalExpenses = state.transactions.reduce((acc, curr) => acc + curr.amount, 0);
+    const remaining = income - tithing - totalExpenses;
 
-    // 2. Render Tithing Row first
-    tbody.innerHTML += `
-        <tr class="bg-blue-50/50">
-            <td class="p-4 border-b font-semibold italic text-blue-800">Tithing (Auto ${tPercent}%)</td>
-            <td class="p-4 border-b font-mono font-bold text-blue-800">$${tithingAmount.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-        </tr>
-    `;
+    // Update Hero Stats
+    heroBalance.innerText = `$${remaining.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+    tithDeduction.innerText = `-$${tithing.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+    
+    // Color coding balance
+    heroBalance.className = remaining < 0 ? "text-6xl font-black text-red-400" : "text-6xl font-black text-white";
 
-    // 3. Calculate and Render Manual Expenses
-    let spentTotal = tithingAmount;
-    manualCategories.forEach(cat => {
-        const amount = budgetData.expenses[cat] || 0;
-        spentTotal += amount;
-        tbody.innerHTML += `
-            <tr>
-                <td class="p-4 border-b">${cat}</td>
-                <td class="p-4 border-b font-mono font-medium">$${amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-            </tr>
+    // Render List
+    historyList.innerHTML = '';
+    [...state.transactions].reverse().forEach((t, index) => {
+        historyList.innerHTML += `
+            <div class="p-4 flex justify-between items-center animate-fadeIn">
+                <div>
+                    <p class="font-bold text-gray-800">${t.category}</p>
+                    <p class="text-xs text-gray-400">${t.date}</p>
+                </div>
+                <p class="font-mono font-bold text-red-500">-$${t.amount.toFixed(2)}</p>
+            </div>
         `;
     });
-
-    const remaining = limit - spentTotal;
-
-    // Update Summary UI
-    document.getElementById('totalSpent').innerText = `$${spentTotal.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-    
-    const remainingEl = document.getElementById('remainingBalance');
-    remainingEl.innerText = `$${remaining.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-    remainingEl.className = remaining < 0 
-        ? "text-xl font-bold mt-1 text-red-600" 
-        : "text-xl font-bold mt-1 text-green-600";
 }
 
-// Config Event Listeners
-document.getElementById('monthlyLimit').addEventListener('input', (e) => {
-    budgetData.limit = parseFloat(e.target.value) || 0;
-    saveData();
+function save() {
+    localStorage.setItem('budgetState', JSON.stringify(state));
+    updateUI();
+}
+
+// Event Listeners
+incomeInput.addEventListener('input', (e) => {
+    state.income = parseFloat(e.target.value) || 0;
+    save();
 });
 
-document.getElementById('tithingPercent').addEventListener('input', (e) => {
-    budgetData.tithingPercent = parseFloat(e.target.value) || 0;
-    saveData();
-});
-
-// Expense Event Listener
-document.getElementById('budgetForm').addEventListener('submit', (e) => {
+document.getElementById('expenseForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    const cat = document.getElementById('category').value;
-    const amt = parseFloat(document.getElementById('amount').value);
-
-    if (!isNaN(amt)) {
-        budgetData.expenses[cat] = (budgetData.expenses[cat] || 0) + amt;
-        document.getElementById('amount').value = '';
-        saveData();
+    const cat = document.getElementById('catInput').value;
+    const amt = parseFloat(document.getElementById('amtInput').value);
+    
+    if (amt > 0) {
+        state.transactions.push({
+            category: cat,
+            amount: amt,
+            date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        });
+        document.getElementById('amtInput').value = '';
+        save();
     }
 });
 
-function clearDataManually() {
-    if(confirm("Wipe all data for the current month?")) {
-        budgetData = { limit: 0, tithingPercent: 10, expenses: {} };
-        document.getElementById('monthlyLimit').value = "";
-        document.getElementById('tithingPercent').value = 10;
-        saveData();
+function changeTithing() {
+    const newRate = prompt("Enter new Tithing percentage:", state.tithRate);
+    if (newRate !== null) {
+        state.tithRate = parseFloat(newRate) || 0;
+        tithRateDisplay.innerText = state.tithRate;
+        save();
     }
 }
 
-checkMonthlyReset();
-renderTable();
+function resetApp() {
+    if(confirm("Clear everything and start over?")) {
+        state.income = 0;
+        state.transactions = [];
+        incomeInput.value = "";
+        save();
+    }
+}
+
+init();
