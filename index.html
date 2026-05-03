@@ -1,131 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Monthly Budget Tracker</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-      background: #f5f5f5;
-    }
-    h1 {
-      text-align: center;
-    }
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .row {
-      display: flex;
-      justify-content: space-between;
-      margin: 10px 0;
-    }
-    input {
-      width: 120px;
-      padding: 5px;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 20px;
-      background: #0078ff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    button:hover {
-      background: #005fcc;
-    }
-    .reset {
-      background: #cc0000;
-      margin-top: 10px;
-    }
-    .reset:hover {
-      background: #990000;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Household Budget</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-slate-50 text-slate-900 font-sans">
 
-<body>
-  <h1>Monthly Budget Tracker</h1>
+    <div class="max-w-4xl mx-auto py-10 px-4">
+        <header class="mb-8 text-center">
+            <h1 id="currentMonthYear" class="text-3xl font-bold text-blue-900">Monthly Budget</h1>
+            <p class="text-slate-500">Data resets automatically on the 1st of every month.</p>
+        </header>
 
-  <div class="container">
-    <div id="category-container"></div>
+        <!-- Input Section -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mb-8">
+            <form id="budgetForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Category</label>
+                    <select id="category" class="w-full p-2 border rounded-md">
+                        <option value="Mortgage">Mortgage</option>
+                        <option value="Tithing">Tithing</option>
+                        <option value="Tara's Spending">Tara's Spending</option>
+                        <option value="Garett's Spending">Garett's Spending</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Amount ($)</label>
+                    <input type="number" id="amount" step="0.01" required class="w-full p-2 border rounded-md" placeholder="0.00">
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md transition">
+                        Add Expense
+                    </button>
+                </div>
+            </form>
+        </div>
 
-    <button onclick="saveBudget()">Save Budget</button>
-    <button class="reset" onclick="resetBudget()">Reset Now</button>
-  </div>
+        <!-- Budget Table -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-100">
+                    <tr>
+                        <th class="p-4 border-b">Category</th>
+                        <th class="p-4 border-b">Total Spent</th>
+                    </tr>
+                </thead>
+                <tbody id="budgetTableBody">
+                    <!-- Rows injected by JavaScript -->
+                </tbody>
+                <tfoot class="bg-slate-50 font-bold">
+                    <tr>
+                        <td class="p-4">Total Monthly Outbound</td>
+                        <td id="grandTotal" class="p-4 text-blue-900">$0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div class="mt-4 text-right">
+            <button onclick="clearDataManually()" class="text-xs text-red-500 hover:underline">Manual Reset (Clear All Data)</button>
+        </div>
+    </div>
 
-  <script>
-    const categories = [
-      "Mortgage",
-      "Tithing",
-      "Tara's Spending",
-      "Garett's Spending",
-      "Utilities",
-      "Groceries",
-      "Misc"
-    ];
-
-    function loadInputs() {
-      const container = document.getElementById("category-container");
-      container.innerHTML = "";
-
-      const saved = JSON.parse(localStorage.getItem("budgetData")) || {};
-
-      categories.forEach(cat => {
-        const row = document.createElement("div");
-        row.className = "row";
-
-        row.innerHTML = `
-          <label>${cat}</label>
-          <input type="number" id="${cat}" value="${saved[cat] || ""}" />
-        `;
-
-        container.appendChild(row);
-      });
-    }
-
-    function saveBudget() {
-      const data = {};
-      categories.forEach(cat => {
-        data[cat] = document.getElementById(cat).value;
-      });
-
-      const month = new Date().getMonth();
-      localStorage.setItem("budgetData", JSON.stringify(data));
-      localStorage.setItem("budgetMonth", month);
-
-      alert("Budget saved!");
-    }
-
-    function resetBudget() {
-      localStorage.removeItem("budgetData");
-      loadInputs();
-      alert("Budget reset!");
-    }
-
-    function autoResetIfNewMonth() {
-      const savedMonth = localStorage.getItem("budgetMonth");
-      const currentMonth = new Date().getMonth();
-
-      if (savedMonth === null || parseInt(savedMonth) !== currentMonth) {
-        resetBudget();
-        localStorage.setItem("budgetMonth", currentMonth);
-      }
-    }
-
-    autoResetIfNewMonth();
-    loadInputs();
-  </script>
+    <script src="app.js"></script>
 </body>
 </html>
