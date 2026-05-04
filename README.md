@@ -1,37 +1,32 @@
-# ## 🛠️ Deployment Options
+# Monthly Budget Tracker
 
-### 1. Easiest — Netlify / Vercel (Recommended)
-1. Push this project to a GitHub repository
-2. Go to [netlify.com](https://netlify.com) or [vercel.com]
-3. Drag & drop the folder or connect your GitHub repo
-4. Your app will be live instantly with a shareable URL
+A simple, beautiful, and private monthly budget web app built with HTML, CSS, and JavaScript. No backend, no tracking, no sign-up required — your data stays in your browser.
 
-### 2. Local Use
-Just double-click `budget.html` — works completely offline.
+![Dark themed budget tracker preview](preview.png)
 
-### 3. Other Platforms
-- GitHub Pages
-- Cloudflare Pages
-- Any static web host
+## ✨ Features
 
-## 🔒 Privacy
+- **Dark modern design** with a clean, mobile-friendly interface
+- **Automatic monthly reset** — starts fresh every new month
+- **Manual reset button** for the current month
+- **Tithing** calculated automatically as a percentage of income
+- **Custom expense categories** (pre-loaded with Mortgage, Tara’s Spending, Garett’s Spending)
+- **Live remaining balance** that updates in real time
+- **Automatic saving** — your data persists between visits
+- Fully offline capable
 
-- All data is stored locally in your browser (`localStorage`)
-- Nothing is sent to any server
-- You can clear data anytime using the reset button or by clearing browser storage
+## 🚀 How to Use
 
-## 💡 Future Enhancement Ideas
+1. Open `budget.html` in any web browser
+2. Enter your **Total Monthly Income**
+3. Set your **Tithing Percentage** (defaults to 10%)
+4. Add expenses to each category
+5. Click **+ Add Custom Category** to create new ones
+6. Watch the **Remaining** balance update automatically
 
-- Export month data to CSV
-- View previous months' budgets
-- Transaction-level logging (instead of just totals)
-- Dark/Light mode toggle
-- Income vs Expense chart
+The app automatically detects when a new month begins and prompts you to reset.
 
-## 📄 License
+### Manual Reset
+Use the **"Reset Current Month"** button if you need to clear the current month’s data.
 
-This project is open source and free to use or modify.
-
----
-
-**Made for personal use** — Feel free to customize the default categories, colors, or add your own features!
+## 📁 Project Structure
