@@ -1,296 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Monthly Budget Tracker</title>
-<style>
-       :root {
-           --primary: #4f46e5;
-       }
-       body {
-           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-           margin: 0;
-           padding: 20px;
-           background: #f8fafc;
-           color: #1e2937;
-       }
-       .container {
-           max-width: 900px;
-           margin: 0 auto;
-           background: white;
-           border-radius: 12px;
-           box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-           overflow: hidden;
-       }
-       header {
-           background: var(--primary);
-           color: white;
-           padding: 20px;
-           text-align: center;
-       }
-       h1 { margin: 0; font-size: 1.8rem; }
-       .month { font-size: 1.1rem; opacity: 0.9; margin-top: 5px; }
-       .main {
-           padding: 20px;
-       }
-       .income-section {
-           background: #f1f5f9;
-           padding: 20px;
-           border-radius: 8px;
-           margin-bottom: 20px;
-       }
-       label {
-           display: block;
-           margin-bottom: 5px;
-           font-weight: 600;
-       }
-       input[type="number"] {
-           width: 100%;
-           padding: 10px;
-           border: 1px solid #cbd5e1;
-           border-radius: 6px;
-           font-size: 1.1rem;
-       }
-       .tithing {
-           display: flex;
-           gap: 15px;
-           align-items: end;
-       }
-       .tithing input {
-           width: 120px;
-       }
-       .balance {
-           font-size: 1.5rem;
-           font-weight: bold;
-           padding: 15px;
-           background: #ecfdf5;
-           border-radius: 8px;
-           text-align: center;
-           margin: 20px 0;
-       }
-       .positive { color: #10b981; }
-       .negative { color: #ef4444; }
-       .categories {
-           margin-top: 20px;
-       }
-       .category {
-           display: flex;
-           align-items: center;
-           gap: 10px;
-           padding: 12px;
-           background: #f8fafc;
-           border: 1px solid #e2e8f0;
-           border-radius: 8px;
-           margin-bottom: 10px;
-       }
-       .category-name {
-           flex: 1;
-           font-weight: 500;
-       }
-       .category-amount {
-           width: 180px;
-       }
-       .delete-btn {
-           background: #ef4444;
-           color: white;
-           border: none;
-           padding: 8px 12px;
-           border-radius: 6px;
-           cursor: pointer;
-       }
-       button {
-           background: var(--primary);
-           color: white;
-           border: none;
-           padding: 12px 20px;
-           border-radius: 8px;
-           font-size: 1rem;
-           cursor: pointer;
-           margin-top: 10px;
-       }
-       button:hover {
-           background: #4338ca;
-       }
-       .add-btn {
-           background: #64748b;
-       }
-       table {
-           width: 100%;
-           border-collapse: collapse;
-           margin-top: 20px;
-       }
-       th, td {
-           padding: 12px;
-           text-align: left;
-           border-bottom: 1px solid #e2e8f0;
-       }
-       th {
-           background: #f1f5f9;
-       }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Budget Tracker</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e2937;
+            --text: #e2e8f0;
+            --text-light: #94a3b8;
+            --primary: #6366f1;
+            --accent: #22d3ee;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+        h1 { margin: 0; font-size: 2rem; }
+        .month { font-size: 1.1rem; opacity: 0.95; margin-top: 6px; }
+        
+        .main {
+            padding: 24px;
+        }
+        
+        .income-section {
+            background: #334155;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            background: #1e2937;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            color: white;
+        }
+        
+        .tithing {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+        
+        .balance {
+            font-size: 1.6rem;
+            font-weight: bold;
+            padding: 20px;
+            background: #1e2937;
+            border-radius: 12px;
+            text-align: center;
+            margin: 24px 0;
+            border: 2px solid #334155;
+        }
+        .positive { color: #34d399; }
+        .negative { color: #f87171; }
+        
+        .categories h2 {
+            margin-bottom: 16px;
+            color: var(--accent);
+        }
+        
+        .category {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: #334155;
+            border: 1px solid #475569;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .category-name {
+            flex: 1;
+            font-weight: 500;
+        }
+        .category-amount {
+            width: 180px;
+            background: #1e2937;
+            color: white;
+        }
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        button:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+        .add-btn {
+            background: #475569;
+        }
+        .reset-btn {
+            background: #b91c1c;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-<header>
-<h1>Monthly Budget Tracker</h1>
-<div class="month" id="current-month"></div>
-</header>
-<div class="main">
-<div class="income-section">
-<label for="income">Total Monthly Income ($)</label>
-<input type="number" id="income" step="0.01" placeholder="5000.00">
-<div style="margin-top: 15px;">
-<label>Tithing Percentage</label>
-<div class="tithing">
-<input type="number" id="tithing-percent" value="10" step="0.1" style="width: 100px;">
-<span>%</span>
-<div style="margin-left: 20px;">
-                           Tithing Amount: <strong id="tithing-amount">$0.00</strong>
-</div>
-</div>
-</div>
-</div>
-<div class="balance" id="balance">
-               Remaining: $0.00
-</div>
-<div class="categories">
-<h2>Expenses</h2>
-<div id="category-list"></div>
-<button onclick="addCategory()" class="add-btn">+ Add Custom Category</button>
-</div>
-<div style="margin-top: 30px; text-align: center; font-size: 0.9rem; color: #64748b;">
-               Data is saved automatically in your browser.<br>
-               This budget resets automatically at the start of each new month.
-</div>
-</div>
-</div>
-<script>
-       let categories = [
-           { id: 1, name: "Mortgage/Rent", amount: 0 },
-           { id: 2, name: "Tara’s Spending", amount: 0 },
-           { id: 3, name: "Garett’s Spending", amount: 0 }
-       ];
-       let currentMonthKey = '';
-       function getCurrentMonthKey() {
-           const now = new Date();
-           return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-       }
-       function loadBudget() {
-           currentMonthKey = getCurrentMonthKey();
-           document.getElementById('current-month').textContent =
-               new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
-           const saved = localStorage.getItem(`budget-${currentMonthKey}`);
-           if (saved) {
-               const data = JSON.parse(saved);
-               document.getElementById('income').value = data.income || 0;
-               document.getElementById('tithing-percent').value = data.tithingPercent || 10;
-               categories = data.categories || categories;
-           } else {
-               // New month - start fresh
-               document.getElementById('income').value = '';
-               document.getElementById('tithing-percent').value = 10;
-               categories = [
-                   { id: 1, name: "Mortgage/Rent", amount: 0 },
-                   { id: 2, name: "Tara’s Spending", amount: 0 },
-                   { id: 3, name: "Garett’s Spending", amount: 0 }
-               ];
-           }
-           renderCategories();
-           updateCalculations();
-       }
-       function saveBudget() {
-           const data = {
-               income: parseFloat(document.getElementById('income').value) || 0,
-               tithingPercent: parseFloat(document.getElementById('tithing-percent').value) || 10,
-               categories: categories
-           };
-           localStorage.setItem(`budget-${currentMonthKey}`, JSON.stringify(data));
-       }
-       function renderCategories() {
-           const container = document.getElementById('category-list');
-           container.innerHTML = '';
-           categories.forEach((cat, index) => {
-               const div = document.createElement('div');
-               div.className = 'category';
-               div.innerHTML = `
-<span class="category-name">${cat.name}</span>
-<input type="number" class="category-amount"
-                          value="${cat.amount}" step="0.01"
-                          onchange="updateCategoryAmount(${index}, this.value)">
-<button class="delete-btn" onclick="deleteCategory(${index})">Delete</button>
-               `;
-               container.appendChild(div);
-           });
-       }
-       function addCategory() {
-           const name = prompt("Enter category name (e.g. Groceries, Utilities):");
-           if (name && name.trim()) {
-               categories.push({
-                   id: Date.now(),
-                   name: name.trim(),
-                   amount: 0
-               });
-               renderCategories();
-               saveBudget();
-           }
-       }
-       function updateCategoryAmount(index, value) {
-           categories[index].amount = parseFloat(value) || 0;
-           saveBudget();
-           updateCalculations();
-       }
-       function deleteCategory(index) {
-           if (confirm("Delete this category?")) {
-               categories.splice(index, 1);
-               renderCategories();
-               saveBudget();
-               updateCalculations();
-           }
-       }
-       function calculateTithing() {
-           const income = parseFloat(document.getElementById('income').value) || 0;
-           const percent = parseFloat(document.getElementById('tithing-percent').value) || 0;
-           const tithing = income * (percent / 100);
-           document.getElementById('tithing-amount').textContent = '$' + tithing.toFixed(2);
-           return tithing;
-       }
-       function updateCalculations() {
-           const income = parseFloat(document.getElementById('income').value) || 0;
-           const tithing = calculateTithing();
-           let totalExpenses = tithing;
-           categories.forEach(cat => {
-               totalExpenses += cat.amount || 0;
-           });
-           const remaining = income - totalExpenses;
-           const balanceEl = document.getElementById('balance');
-           balanceEl.textContent = `Remaining: $${remaining.toFixed(2)}`;
-           if (remaining >= 0) {
-               balanceEl.classList.add('positive');
-               balanceEl.classList.remove('negative');
-           } else {
-               balanceEl.classList.add('negative');
-               balanceEl.classList.remove('positive');
-           }
-       }
-       // Event listeners
-       function setupListeners() {
-           const incomeInput = document.getElementById('income');
-           const percentInput = document.getElementById('tithing-percent');
-           incomeInput.addEventListener('input', () => {
-               saveBudget();
-               updateCalculations();
-           });
-           percentInput.addEventListener('input', () => {
-               saveBudget();
-               updateCalculations();
-           });
-       }
-       // Initialize
-       window.onload = () => {
-           loadBudget();
-           setupListeners();
-       };
-</script>
+    <div class="container">
+        <header>
+            <h1>Monthly Budget Tracker</h1>
+            <div class="month" id="current-month"></div>
+        </header>
+        
+        <div class="main">
+            <div class="income-section">
+                <label for="income">Total Monthly Income ($)</label>
+                <input type="number" id="income" step="0.01" placeholder="5000.00">
+                
+                <div style="margin-top: 18px;">
+                    <label>Tithing Percentage</label>
+                    <div class="tithing">
+                        <input type="number" id="tithing-percent" value="10" step="0.1" style="width: 110px;">
+                        <span style="font-size: 1.2rem;">%</span>
+                        <div style="margin-left: 20px; font-size: 1.1rem;">
+                            Tithing: <strong id="tithing-amount">$0.00</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="balance" id="balance">
+                Remaining: $0.00
+            </div>
+            
+            <div class="categories">
+                <h2>Expenses</h2>
+                <div id="category-list"></div>
+                
+                <div class="actions">
+                    <button onclick="addCategory()" class="add-btn">+ Add Custom Category</button>
+                    <button onclick="manualReset()" class="reset-btn">Reset Current Month</button>
+                </div>
+            </div>
+            
+            <div class="footer-note">
+                Data saved automatically in your browser • Auto-resets on new month
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let categories = [
+            { id: 1, name: "Mortgage/Rent", amount: 0 },
+            { id: 2, name: "Tara’s Spending", amount: 0 },
+            { id: 3, name: "Garett’s Spending", amount: 0 }
+        ];
+        
+        let currentMonthKey = '';
+        
+        function getCurrentMonthKey() {
+            const now = new Date();
+            return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        }
+        
+        function loadBudget() {
+            const newMonthKey = getCurrentMonthKey();
+            
+            // Auto-reset if month changed
+            if (newMonthKey !== currentMonthKey && currentMonthKey !== '') {
+                if (confirm("New month detected! Reset budget?")) {
+                    resetCurrentMonthData();
+                }
+            }
+            
+            currentMonthKey = newMonthKey;
+            document.getElementById('current-month').textContent = 
+                new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
+            
+            const saved = localStorage.getItem(`budget-${currentMonthKey}`);
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('income').value = data.income || '';
+                document.getElementById('tithing-percent').value = data.tithingPercent || 10;
+                categories = data.categories || categories;
+            } else {
+                // Fresh month
+                document.getElementById('income').value = '';
+                document.getElementById('tithing-percent').value = 10;
+                categories = [
+                    { id: 1, name: "Mortgage/Rent", amount: 0 },
+                    { id: 2, name: "Tara’s Spending", amount: 0 },
+                    { id: 3, name: "Garett’s Spending", amount: 0 }
+                ];
+            }
+            
+            renderCategories();
+            updateCalculations();
+        }
+        
+        function saveBudget() {
+            const data = {
+                income: parseFloat(document.getElementById('income').value) || 0,
+                tithingPercent: parseFloat(document.getElementById('tithing-percent').value) || 10,
+                categories: categories
+            };
+            localStorage.setItem(`budget-${currentMonthKey}`, JSON.stringify(data));
+        }
+        
+        function renderCategories() {
+            const container = document.getElementById('category-list');
+            container.innerHTML = '';
+            
+            categories.forEach((cat, index) => {
+                const div = document.createElement('div');
+                div.className = 'category';
+                div.innerHTML = `
+                    <span class="category-name">${cat.name}</span>
+                    <input type="number" class="category-amount" 
+                           value="${cat.amount}" step="0.01" 
+                           onchange="updateCategoryAmount(${index}, this.value)">
+                    <button class="delete-btn" onclick="deleteCategory(${index})">Delete</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+        
+        function addCategory() {
+            const name = prompt("Enter new category name:");
+            if (name && name.trim()) {
+                categories.push({
+                    id: Date.now(),
+                    name: name.trim(),
+                    amount: 0
+                });
+                renderCategories();
+                saveBudget();
+            }
+        }
+        
+        function updateCategoryAmount(index, value) {
+            categories[index].amount = parseFloat(value) || 0;
+            saveBudget();
+            updateCalculations();
+        }
+        
+        function deleteCategory(index) {
+            if (confirm("Delete this category?")) {
+                categories.splice(index, 1);
+                renderCategories();
+                saveBudget();
+                updateCalculations();
+            }
+        }
+        
+        function calculateTithing() {
+            const income = parseFloat(document.getElementById('income').value) || 0;
+            const percent = parseFloat(document.getElementById('tithing-percent').value) || 0;
+            const tithing = income * (percent / 100);
+            document.getElementById('tithing-amount').textContent = '$' + tithing.toFixed(2);
+            return tithing;
+        }
+        
+        function updateCalculations() {
+            const income = parseFloat(document.getElementById('income').value) || 0;
+            const tithing = calculateTithing();
+            
+            let totalExpenses = tithing;
+            categories.forEach(cat => totalExpenses += cat.amount || 0);
+            
+            const remaining = income - totalExpenses;
+            const balanceEl = document.getElementById('balance');
+            
+            balanceEl.textContent = `Remaining: $${remaining.toFixed(2)}`;
+            balanceEl.classList.toggle('positive', remaining >= 0);
+            balanceEl.classList.toggle('negative', remaining < 0);
+        }
+        
+        function manualReset() {
+            if (confirm("Reset ALL data for this month? This cannot be undone.")) {
+                resetCurrentMonthData();
+            }
+        }
+        
+        function resetCurrentMonthData() {
+            localStorage.removeItem(`budget-${currentMonthKey}`);
+            loadBudget(); // Reload fresh
+        }
+        
+        // Setup listeners
+        function setupListeners() {
+            const incomeInput = document.getElementById('income');
+            const percentInput = document.getElementById('tithing-percent');
+            
+            incomeInput.addEventListener('input', () => {
+                saveBudget();
+                updateCalculations();
+            });
+            
+            percentInput.addEventListener('input', () => {
+                saveBudget();
+                updateCalculations();
+            });
+        }
+        
+        // Initialize
+        window.onload = () => {
+            loadBudget();
+            setupListeners();
+        };
+    </script>
 </body>
 </html>
